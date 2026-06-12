@@ -1,11 +1,21 @@
-import React from 'react'
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 
 const App = () => {
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    </div>
-  )
-}
 
-export default App
+    <>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Dashboard />} />
+        </Route>
+      </Routes>
+
+    </>
+
+  );
+};
+
+export default App;
