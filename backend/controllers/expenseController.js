@@ -1,9 +1,11 @@
-import incomeModel from "../models/incomeModel.js";
-import XLSX from 'xlsx';
+
+import expenseModel from "../models/expenseModel.js";
 import getDateRange from "../utils/dateFilter.js";
+import XLSX from 'xlsx';
 
+// add expense
 
-export async function addIncome(req, res) {
+export async function addExpense(req, res) {
 
     const userId = req.user._id
     const { description, amount, category, date } = req.body;
@@ -17,7 +19,7 @@ export async function addIncome(req, res) {
             });
         }
 
-        const newIncome = new incomeModel({
+        const newExpense = new expenseModel({
             userId,
             description,
             amount,
@@ -25,10 +27,10 @@ export async function addIncome(req, res) {
             date: new Date(date)
 
         });
-        await newIncome.save();
+        await newExpense.save();
         res.json({
             success: true,
-            message: "Income added successfully!"
+            message: "Expense added successfully!"
         });
 
     }
@@ -40,17 +42,18 @@ export async function addIncome(req, res) {
             message: "Server Error"
         });
     }
+
 }
 
-// too get all income
+// to all expense
 
-export async function getAllIncome(req, res) {
+export async function getAllExpense(req, res) {
 
     const userId = req.user._id;
 
     try {
-        const income = await incomeModel.find({ userId }).sort({ date: -1 })
-        res.json(income);
+        const expense = await expenseModel.find({ userId }).sort({ date: -1 })
+        res.json(expense);
     }
     catch (error) {
         console.log(error);
@@ -59,31 +62,30 @@ export async function getAllIncome(req, res) {
             message: "Server Error"
         });
     }
-
 }
 
-// to update income
+//to update the expense
 
-export async function updateIncome(req, res) {
+export async function updateExpense(req, res) {
 
     const { id } = req.params;
     const userId = req.user._id;
     const { description, amount } = req.body;
 
     try {
-        const updatedIncome = await incomeModel.findOneAndUpdate(
+        const updatedExpense = await expenseModel.findOneAndUpdate(
             { _id: id, userId },
             { description, amount },
             { new: true }
         );
-        if (!updatedIncome) {
+        if (!updatedExpense) {
             return res.status(404).json({
                 success: false,
-                message: "Income not found"
+                message: "Expense not found"
             });
         }
 
-        res.json({ success: true, message: "Income updated Successfully", data: updatedIncome });
+        res.json({ success: true, message: "Expense updated Successfully", data: updatedExpense });
     }
     catch (error) {
         console.log(error);
@@ -92,26 +94,25 @@ export async function updateIncome(req, res) {
             message: "Server Error"
         });
     }
-
-
 }
 
-// to delete an income
 
-export async function deleteIncome(req, res) {
+// to delete a particular expense
+
+export async function deleteExpense(req, res) {
 
     try {
-        const income = await incomeModel.findByIdAndDelete({ _id: req.params.id });
-        if (!income) {
+        const expense = await expenseModel.findByIdAndDelete({ _id: req.params.id });
+        if (!expense) {
             return res.status(404).json({
                 success: false,
-                message: "Income not found"
+                message: "Expense not found"
             });
         }
 
         return res.json({
             success: true,
-            message: "Income deleted successfully!"
+            message: "Expense deleted successfully!"
         });
     }
     catch (error) {
@@ -123,26 +124,26 @@ export async function deleteIncome(req, res) {
     }
 }
 
-// to download the data in an excel sheet
+// to download excel for expense
 
-export async function downloadIncomeExcel(req, res) {
+export async function downloadExpenseExcel(req, res) {
 
     const userId = req.user._id;
     try {
 
-        const income = await incomeModel.find({ userId }).sort({ date: -1 });
-        const plainData = income.map((inc) => ({
-            Description: inc.description,
-            Amount: inc.amount,
-            Category: inc.category,
-            Date: new Date(inc.date).toLocaleDateString(),
+        const expense = await expenseModel.find({ userId }).sort({ date: -1 });
+        const plainData = expense.map((exp) => ({
+            Description: exp.description,
+            Amount: exp.amount,
+            Category: exp.category,
+            Date: new Date(exp.date).toLocaleDateString(),
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(plainData);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "incomeModel");
-        XLSX.writeFile(workbook, "income_details.xlsx");
-        res.download("income_details.xlsx");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "expenseModel");
+        XLSX.writeFile(workbook, "expense_details.xlsx");
+        res.download("expense_details.xlsx");
 
     }
     catch (error) {
@@ -155,33 +156,34 @@ export async function downloadIncomeExcel(req, res) {
 
 }
 
-//to get the income overview
+// to get the overview of the expense
 
-export async function getIncomeOverview(req, res) {
+export async function getExpenseOverview(req, res) {
 
     try {
         const userId = req.user._id;
         const { range = "montly" } = req.query;
         const { start, end } = getDateRange(range);
 
-        const incomes = await incomeModel.find({
+        const expense = await expenseModel.find({
             userId,
             date: { $gte: start, $lte: end },
         }).sort({ date: -1 });
 
 
 
-        const totalIncome = incomes.reduce((acc, cur) => acc + cur.amount, 0);
-        const averageIncome = incomes.length > 0 ? totalIncome / incomes.length : 0;
-        const numberOfTransactions = incomes.length;
+        const totalExpense = expense.reduce((acc, cur) => acc + cur.amount, 0);
+        const averageExpense =
+            expense.length > 0 ? totalExpense / expense.length : 0;
+        const numberOfTransactions = expense.length;
 
-        const recentTransactions = incomes.slice(0, 9);
+        const recentTransactions = expense.slice(0, 5);
 
         res.json({
             success: true,
             data: {
-                totalIncome,
-                averageIncome,
+                totalExpense,
+                averageExpense,
                 numberOfTransactions,
                 recentTransactions,
                 range
@@ -198,4 +200,5 @@ export async function getIncomeOverview(req, res) {
             message: "Server Error"
         });
     }
+
 }

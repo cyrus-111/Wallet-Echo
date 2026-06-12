@@ -1,4 +1,4 @@
-console.log("User routes loaded");
+
 
 import express from 'express';
 import { getCurrentUser, loginUser, registerUser, updatePassword, updateProfile } from '../controllers/userController.js';
