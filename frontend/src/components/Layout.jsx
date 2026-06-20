@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { styles } from '../assets/dummyStyles';
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import { ArrowDown, ArrowUp, DollarSign, PiggyBank, TrendingUp, Utensils, Home, Car, ShoppingCart, Gift, Zap, Activity, CreditCard, RefreshCw, Clock, Info, ChevronUp, ChevronDown } from "lucide-react";
+import { ArrowDown, ArrowUp, DollarSign, PiggyBank, TrendingUp, Utensils, Home, Car, ShoppingCart, Gift, Zap, Activity, CreditCard, RefreshCw, Clock, Info, ChevronUp, ChevronDown, PieChart } from "lucide-react";
 import axios from "axios";
 import { Outlet } from "react-router-dom";
 
@@ -472,6 +472,59 @@ const Layout = ({ onLogout, user }) => {
                     </button>
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* spending by category card*/}
+            <div className={styles.cards.base}>
+              <h3 className={styles.categories.title}>
+                <PieChart className={styles.categories.titleIcon} />
+                Spending by Category
+              </h3>
+
+              <div className={styles.categories.list}>
+                {topCategories.map(([category, amount]) => (
+
+                  <div key={category} className={styles.categories.categoryItem}>
+                    <div className=" flex items-center gap-3">
+                      <div className={styles.categories.categoryIconContainer}>
+                        {CATEGORY_ICONS[category] || (
+                          <DollarSign className={styles.categories.categoryIcon} />
+                        )}
+                      </div>
+
+                      <span className={styles.categories.categoryName}>
+                        {category}
+                      </span>
+                    </div>
+                    <span className={styles.categories.categoryAmount}>
+                      $ {amount}
+                    </span>
+                  </div>
+
+                ))}
+              </div>
+
+              <div className={styles.categories.summaryContainer}>
+                <div className={styles.categories.summaryGrid}>
+                  <div className={styles.categories.summaryIncomeCard}>
+                    <p className={styles.categories.summaryTitle}>
+                      Total Income
+                    </p>
+                    <p className={styles.categories.summaryValue}>
+                      ${stats.allTimeIncome.toLocaleString()}
+                    </p>
+                  </div>
+
+                  <div className={styles.categories.summaryExpenseCard}>
+                    <p className={styles.categories.summaryTitle}>
+                      Total Expense
+                    </p>
+                    <p className={styles.categories.summaryValue}>
+                      ${stats.allTimeExpenses.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
