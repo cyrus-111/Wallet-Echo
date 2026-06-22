@@ -3,6 +3,7 @@ import { Route, Routes , useNavigate, } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Login from "./components/Login.jsx";
+import Signup from "./components/Signup.jsx";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -52,16 +53,25 @@ const App = () => {
     navigate("/"); 
   };
 
+  const handleSignup = (userData, remember = false, tokenFromApi = null)  => {
+    persistAuth(userData, tokenFromApi, remember);
+    navigate("/"); 
+  };
+
   const handleLogout = () => {
     clearAuth();
     navigate("/login");
-  }
+  };
+
+  
+
   return (
 
     <>
       <Routes>
 
-        <Route path="/login" element={<Login onLogin={handleLogin}/> } />          
+        <Route path="/login" element={<Login onLogin={handleLogin}/> } />        
+        <Route path="/signup"  element={<Signup onSignup={handleSignup}/>} />
 
 
         <Route element={<Layout user={user} onLogout={handleLogout} />}>
