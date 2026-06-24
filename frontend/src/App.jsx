@@ -8,6 +8,7 @@ import Signup from "./components/Signup.jsx";
 import { useEffect } from "react";
 import Income from './pages/Income.jsx';
 import Expense from "./pages/Expense.jsx";
+import Profile from "./pages/Profile.jsx";
 
 
 const API_URL = "http://localhost:4000";
