@@ -231,12 +231,18 @@ const App = () => {
 
             } />
 
-            <Route path="/expense"
+          <Route path="/expense"
             element={
               <Expense transactions={transactions}
                 addTransaction={addTransaction} editTransaction={editTransaction} deleteTransaction={deleteTransaction} refreshTransactions={refreshTransactions} />
-            }/>
+            } />
+
+            <Route path="/profile" element={<Profile user={user}
+              onUpdateProfile = {updateUserData} onLogout={handleLogout}
+            />}/>
         </Route>
+
+        <Route path="*" element={<Navigate to ={user ? "/" : "/login"} replace/>}/>
       </Routes>
 
     </>
