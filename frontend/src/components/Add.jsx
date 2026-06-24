@@ -1,5 +1,6 @@
 import React from 'react';
 import { modalStyles } from '../assets/dummyStyles';
+import { X } from 'lucide-react';
 
 
 const AddTransactionModal = ({
@@ -122,7 +123,7 @@ const AddTransactionModal = ({
                                 Date
                             </label>
                             <input type="date" value={newTransaction.date} onChange={(e) =>
-                                newTransaction
+                                setNewTransaction
                                     ((prev) => ({
                                         ...prev,
                                         date: e.target.value,
