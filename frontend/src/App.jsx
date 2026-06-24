@@ -6,6 +6,8 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Login from "./components/Login.jsx";
 import Signup from "./components/Signup.jsx";
 import { useEffect } from "react";
+import Income from './pages/Income.jsx';
+import Expense from "./pages/Expense.jsx";
 
 
 const API_URL = "http://localhost:4000";
@@ -130,7 +132,7 @@ const App = () => {
               headers: { Authorization: `Bearer ${storedToken}` }
             });
             const profile = res.data;
-            persistAuth(profile, storedToken, tokenFromLoacal);
+            persistAuth(profile, storedToken, tokenFromLocal);
           }
           catch (fetchErr) {
             console.warn("Could not fetch profile with the stored token:", fetchErr);
@@ -221,11 +223,23 @@ const App = () => {
           <Route path="/" element={<Dashboard />} transactions={transactions}
             addTransaction={addTransaction} editTransaction={editTransaction} deleteTransaction={deleteTransaction} refreshTransactions={refreshTransactions}
           />
+
+          <Route path="/income"
+            element={
+              <Income transactions={transactions}
+                addTransaction={addTransaction} editTransaction={editTransaction} deleteTransaction={deleteTransaction} refreshTransactions={refreshTransactions} />
+
+            } />
+
+            <Route path="/expense"
+            element={
+              <Expense transactions={transactions}
+                addTransaction={addTransaction} editTransaction={editTransaction} deleteTransaction={deleteTransaction} refreshTransactions={refreshTransactions} />
+            }/>
         </Route>
       </Routes>
 
     </>
-
   );
 };
 
