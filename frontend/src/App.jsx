@@ -11,7 +11,7 @@ import Expense from "./pages/Expense.jsx";
 import Profile from "./pages/Profile.jsx";
 
 
-const API_URL = "http://localhost:4000";
+const API_URL = "https://wallet-echo-api.onrender.com/api";
 
 // to get transaction from local storage
 
